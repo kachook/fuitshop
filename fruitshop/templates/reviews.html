@@ -1,0 +1,59 @@
+{% extends 'base.html' %}
+
+{% block title %}Reviews{% endblock %}
+
+{% block content %}
+    <h1>Reviews</h1>
+    <div class="row">
+        {% for review in reviews %}
+            <div class="col-md-4 mb-4">
+                <div class="card">
+                    <div class="card-body">
+                        {{ review|safe }}
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+    <div class="row">
+        <nav aria-label="Review navigation">
+            <ul class="pagination justify-content-center">
+                {% if page > 1 %}
+                    <li class="page-item">
+                        <a class="page-link" href="{{ url_for('shop.reviews', page=1) }}" alt="First page">&laquo;</a>
+                    </li>
+                {% else %}
+                    <li class="page-item disabled">
+                        <a class="page-link" alt="First page">&laquo;</a>
+                    </li>
+                {% endif %}
+
+                {% if page-1 > 0 %}
+                    <li class="page-item">
+                        <a class="page-link" href="{{ url_for('shop.reviews', page=page-1) }}">{{ page-1 }}</a>
+                    </li>
+                {% endif %}
+
+                <li class="page-item active" aria-current="page">
+                    <a class="page-link">{{ page }}</a>
+                </li>
+
+                {% if page < total_pages %}
+                    <li class="page-item">
+                        <a class="page-link" href="{{ url_for('shop.reviews', page=page+1) }}">{{ page+1 }}</a>
+                    </li>
+                {% endif %}
+
+                {% if page < total_pages %}
+                    <li class="page-item">
+                        <a class="page-link" href="{{ url_for('shop.reviews', page=total_pages) }}" alt="Last page">&raquo;</a>
+                    </li>
+                {% else %}
+                    <li class="page-item disabled">
+                        <a class="page-link" alt="Last page">&raquo;</a>
+                    </li>
+                {% endif %}
+            </ul>
+          </nav>
+    </div>
+{% endblock %}

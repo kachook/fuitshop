@@ -1,0 +1,98 @@
+{% extends 'base.html' %}
+
+{% block title %}Review Order{% endblock %}
+
+{% block content %}
+    <div class="container mt-5">
+        <div class="row justify-content-center">
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-body">
+                        <h1 class="card-title text-center mb-4">Review Order</h1>
+
+                        <div class="row">
+                            <div class="col text-start">
+                                <p class="fw-bold">Order ID:</p>
+                            </div>
+                            <div class="col text-end">
+                                <span>{{ order.id }}</span>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col text-start">
+                                <p class="fw-bold">Order Date:</p>
+                            </div>
+                            <div class="col text-end">
+                                <span>{{ order.date_created.strftime('%d %b %Y, %H:%M:%S') }}</span>
+                            </div>
+                        </div>
+                        
+                        <hr>
+
+                        <ul class="list-group">
+                            {% for item in order.items %}
+                                <div class="d-flex justify-content-between">
+                                    <img src="{{ url_for('static', filename='images/' + item.fruit.name.lower() + '.png') }}" alt="{{ item.fruit.name }}" class="mr-2" style="width: 30px; height: 30px;">
+                                    <span>{{ item.fruit.name }} x{{ item.quantity }}</span>
+                                    <span>${{ "%.2f"|format(item.fruit.price * item.quantity) }}</span>
+                                </div>
+                            {% endfor %}
+                        </ul>
+
+                        <hr>
+
+                        <div class="row">
+                            <div class="col text-start">
+                                <p class="fw-bold">Subtotal:</p>
+                            </div>
+                            <div class="col text-end">
+                                <span>${{ "%.2f"|format(order.subtotal) }}</span>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col text-start">
+                                <p class="fw-bold">Discount:</p>
+                            </div>
+                            <div class="col text-end">
+                                {% if order.promo %}
+                                    <span>-${{ "%.2f"|format(order.discount) }} ({{ order.promo }})</span>
+                                {% else %}
+                                    <span>-${{ "%.2f"|format(order.discount) }}</span>
+                                {% endif %}
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col text-start">
+                                <p class="fw-bold">Total:</p>
+                            </div>
+                            <div class="col text-end">
+                                <span>${{ "%.2f"|format(order.total) }}</span>
+                            </div>
+                        </div>
+
+                        <hr>
+
+                        <form method="post" action="{{ url_for('shop.order_review_submit', order_id=order.id) }}">
+                            <div class="form-group">
+                                <label for="title" class="form-label">Review Title</label>
+                                <input type="text" class="form-control" id="title" name="title" maxlength="50" required>
+                            </div>
+
+                            <div class="form-group mt-2">
+                              <label for="comments">Review Comments</label>
+                              <textarea class="form-control" id="comments" name="comments" rows="3" maxlength="1000"></textarea>
+                            </div>
+
+                            <hr>
+
+                            <button class="btn btn-primary w-100">Post Review</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

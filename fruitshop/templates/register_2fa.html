@@ -1,0 +1,34 @@
+{% extends 'base.html' %}
+
+{% block title %}Register{% endblock %}
+
+{% block content %}
+    <div class="container mt-5">
+        <div class="row justify-content-center">
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-body">
+                        <h1 class="card-title text-center mb-4">Register</h1>
+                        <p class="card-text text-center">
+                            Scan the QR code below with your 2FA app, then enter the 2FA code.
+                            <br>
+                            (or use the code <code>{{ otp_secret }}</code>)
+                        </p>
+                        <div class="text-center mb-3">
+                            <img src="{{ qrcode(otp_url) }}" alt="QR Code">
+                        </div>
+                        <form method="post" action="/register/2fa">
+                            <div class="mb-3">
+                                <label for="otp" class="form-label">2FA Code</label>
+                                <input type="text" class="form-control" id="otp" name="otp" required>
+                            </div>
+                            <div class="d-grid">
+                                <button type="submit" class="btn btn-primary">Verify 2FA</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

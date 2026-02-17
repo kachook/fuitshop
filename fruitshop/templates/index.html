@@ -1,0 +1,100 @@
+{% extends 'base.html' %}
+
+{% block title %}Fruit Shop{% endblock %}
+
+{% block content %}
+    {% if user %}
+        <h1>Fruit Shop (Balance: ${{ "%.2f"|format(user.balance) }})</h1>
+    {% else %}
+        <h1>Fruit Shop</h1>
+    {% endif %}
+    <div class="row">
+        {% for fruit in fruits %}
+            <div class="col-md-4 mb-4">
+                <div class="card">
+                    <img src="{{ url_for('static', filename='images/' + fruit.name.lower() + '.png') }}" class="card-img-top" alt="{{ fruit.name }}">
+                    <div class="card-body">
+                        <h5 class="card-title">{{ fruit.name }}</h5>
+                        <p class="card-text">${{ fruit.price }}</p>
+                        <button class="btn btn-primary" onclick="addToCart({{ fruit.id }}, '{{ fruit.name }}', '{{ url_for('static', filename='images/' + fruit.name.lower() + '.png') }}')">Add to Cart</button>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+    <div class="row">
+        <span>
+            <!-- Not part of the challenge -->
+            <a href="https://www.freepik.com/free-vector/fruits-collection-cartoon-vector-icon-illustration-food-nature-icon-concept-isolated-premium-vector_46969946.htm#query=fruit&position=6&from_view=search&track=sph&uuid=77a90289-602e-40e7-82e9-581f1d9e47cf" rel="noreferrer">Images by catalyststuff</a> on Freepik
+        </span>
+    </div>
+{% endblock %}
+
+{% block footer %}
+    <div class="offcanvas offcanvas-end" tabindex="-1" id="cartOffcanvas" aria-labelledby="cartOffcanvasLabel">
+        <div class="offcanvas-header">
+            <h5 class="offcanvas-title" id="cartOffcanvasLabel">Shopping Cart</h5>
+            <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+        </div>
+        <div class="offcanvas-body">
+            <div id="cartItems">
+                <!-- Cart items will be dynamically added here -->
+            </div>
+            <hr class="mt-4">
+            <div class="row">
+                <label for="promoCode" class="form-label">Promo Code:</label>
+                <div class="input-group">
+                    <input type="text" class="form-control" id="promoCode" placeholder="Enter promo code">
+                    <button class="btn btn-outline-primary" type="button" onclick="applyPromoCode()">Apply</button>
+                </div>
+            </div>
+            <hr>
+            <div class="spinner-border text-primary" id="checkoutLoading" role="status">
+                <span class="visually-hidden">Loading...</span>
+            </div>
+            <div id="checkoutPreview">
+                <div class="row">
+                    <div class="col text-start">
+                        <p class="fw-bold">Subtotal:</p>
+                    </div>
+                    <div class="col text-end">
+                        <span id="checkoutSubtotal">$0.00</span>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col text-start">
+                        <p class="fw-bold">Discount:</p>
+                    </div>
+                    <div class="col text-end">
+                        <span id="checkoutDiscount">$0.00</span>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col text-start">
+                        <p class="fw-bold">Total:</p>
+                    </div>
+                    <div class="col text-end">
+                        <span id="checkoutTotal">$0.00</span>
+                    </div>
+                </div>
+            </div>
+            {% if user %}
+                <hr>
+                <div class="row">
+                    <div class="col text-start">
+                        <p class="fw-bold">Current Balance:</p>
+                    </div>
+                    <div class="col text-end">
+                        <span id="checkoutBalance">${{ "%.2f"|format(user.balance) }}</span>
+                    </div>
+                </div>
+            {% endif %}
+            <hr>
+            <button class="btn btn-primary btn-lg w-100 mt-3" id="checkoutButton" onclick="checkout()" disabled>Checkout</button>
+            <div class="row mt-4">
+                <p class="fw-bold text-danger" id="checkoutErrorText"></p>
+            </div>
+        </div>
+    </div>
+    <script src="{{ url_for('static', filename='js/cart.js') }}"></script>
+{% endblock %}

@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+
+{% block title %}Login{% endblock %}
+
+{% block content %}
+    <div class="container mt-5">
+        <div class="row justify-content-center">
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-body">
+                        <h1 class="card-title text-center mb-4">2FA Login</h1>
+                        <p class="card-text text-center">Enter the code from your 2FA app.</p>
+                        <form class="mt-4" method="post" action="/login/2fa">
+                            <div class="mb-3">
+                                <label for="otp" class="form-label">2FA Code</label>
+                                <input type="text" class="form-control" id="otp" name="otp" required>
+                            </div>
+                            <div class="d-grid">
+                                <button type="submit" class="btn btn-primary">Verify 2FA</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

@@ -1,0 +1,87 @@
+{% extends 'base.html' %}
+
+{% block title %}Order #{{ order.id }} Details{% endblock %}
+
+{% block content %}
+    <div class="container mt-5">
+        <div class="row justify-content-center">
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-body">
+                        <h1 class="card-title text-center mb-4">Order #{{ order.id }} Details</h1>
+
+                        <div class="row">
+                            <div class="col text-start">
+                                <p class="fw-bold">Order ID:</p>
+                            </div>
+                            <div class="col text-end">
+                                <span>{{ order.id }}</span>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col text-start">
+                                <p class="fw-bold">Order Date:</p>
+                            </div>
+                            <div class="col text-end">
+                                <span>{{ order.date_created.strftime('%d %b %Y, %H:%M:%S') }}</span>
+                            </div>
+                        </div>
+                        
+                        <hr>
+
+                        <ul class="list-group">
+                            {% for item in order.items %}
+                                <div class="d-flex justify-content-between">
+                                    <img src="{{ url_for('static', filename='images/' + item.fruit.name.lower() + '.png') }}" alt="{{ item.fruit.name }}" class="mr-2" style="width: 30px; height: 30px;">
+                                    <span>{{ item.fruit.name }} x{{ item.quantity }}</span>
+                                    <span>${{ "%.2f"|format(item.fruit.price * item.quantity) }}</span>
+                                </div>
+                            {% endfor %}
+                        </ul>
+
+                        <hr>
+
+                        <div class="row">
+                            <div class="col text-start">
+                                <p class="fw-bold">Subtotal:</p>
+                            </div>
+                            <div class="col text-end">
+                                <span>${{ "%.2f"|format(order.subtotal) }}</span>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col text-start">
+                                <p class="fw-bold">Discount:</p>
+                            </div>
+                            <div class="col text-end">
+                                {% if order.promo %}
+                                    <span>-${{ "%.2f"|format(order.discount) }} ({{ order.promo }})</span>
+                                {% else %}
+                                    <span>-${{ "%.2f"|format(order.discount) }}</span>
+                                {% endif %}
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col text-start">
+                                <p class="fw-bold">Total:</p>
+                            </div>
+                            <div class="col text-end">
+                                <span>${{ "%.2f"|format(order.total) }}</span>
+                            </div>
+                        </div>
+
+                        <hr>
+
+                        <div class="btn-group w-100">
+                            <a href="{{ url_for('shop.order_review', order_id=order.id) }}" class="btn btn-primary">Write a Review</a>
+                            <a href="{{ url_for('shop.orders') }}" class="btn btn-outline-primary">Back to Orders</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

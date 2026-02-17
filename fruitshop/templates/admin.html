@@ -1,0 +1,69 @@
+{% extends 'base.html' %}
+
+{% block title %}Admin Page{% endblock %}
+
+{% block content %}
+    <div class="container mt-4">
+        <h1 class="mb-4">Admin Page</h1>
+
+        {% if promo_codes %}
+            <div class="table-responsive">
+                <h2>Promo Codes</h2>
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>Code</th>
+                            <th>Discount (%)</th>
+                            <th>Uses Left</th>
+                            <th>Remove</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for promo_code in promo_codes %}
+                            <tr>
+                                <td>{{ promo_code.code }}</td>
+                                <td>{{ promo_code.discount }}</td>
+                                <td>{{ promo_code.uses_left or 'Unlimited' }}</td>
+                                <td>
+                                    <form method="post" action="/admin/promo/{{ promo_code.id }}/delete">
+                                        <button type="submit" class="btn btn-danger btn-sm">
+                                            <i class="fas fa-trash-alt"></i> <!-- Font Awesome trash bin icon -->
+                                        </button>
+                                    </form>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        {% endif %}
+
+        <div class="row mt-4">
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-body">
+                        <h2 class="card-title">Add Promo Code</h2>
+                        <form method="post" action="/admin/promo">
+                            <div class="mb-3">
+                                <label for="code" class="form-label">Promo Code:</label>
+                                <input type="text" class="form-control" name="code" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="discount" class="form-label">Discount (%):</label>
+                                <input type="number" class="form-control" name="discount" min="0" max="100" step="1" value="0">
+                            </div>
+                            <div class="mb-3">
+                                <label for="uses_left" class="form-label">Uses Left:</label>
+                                <input type="number" class="form-control" name="uses_left" min="0" step="1" value="0">
+                            </div>
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fas fa-plus"></i>
+                                Add Promo Code
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
